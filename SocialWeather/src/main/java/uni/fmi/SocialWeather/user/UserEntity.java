@@ -44,6 +44,8 @@ public class UserEntity implements Serializable{
 		this.password = password;
 		this.email = email;
 	}
+	
+	public UserEntity() {	}
 
 	public int getId() {
 		return id;

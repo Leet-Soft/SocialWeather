@@ -84,7 +84,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <form id="register-form">
+                    <form id="register-form" action="/register" method="POST">
                         <div class="form-group">
                             <label for="register-user">Потребител</label>
                             <input type="text" class="form-control" id="register-user" name="username" placeholder="Потребител">
@@ -122,6 +122,26 @@
 
 <script>
     bindEvents();    
+    
+    $('#login-form').submit(function(e){
+    	e.preventDefault();
+    	
+    	$.ajax({
+    		url: "login",
+    		method: "POST",
+    		data: {
+    			username : $('#username').val(),
+    			password : $('#password').val()
+    		},
+    		success: function(data){
+    			window.location.replace(data);
+    		},
+    		fail : function(){
+    			alert("Request failed.....");
+    		}    		
+    	});
+    	
+    });
     
 </script>
 </body>

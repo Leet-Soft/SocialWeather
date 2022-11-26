@@ -1,5 +1,6 @@
 package uni.fmi.SocialWeather.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 		jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
+	@Autowired
 	private ApplicationUserDetailService userDetailsService;
 	
 	@Override
