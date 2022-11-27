@@ -229,13 +229,13 @@
     				if(data.includes("Error:")){
     					alert(data);
     				}else{
-    					addCommentToUI(comment, city, temp, icon);
+    					addCommentToUI(comment, city, temp, icon, data);
     				}
     			}
     		});
     	}
     	
-    	function addCommentToUI(comment, city, temp, icon){
+    	function addCommentToUI(comment, city, temp, icon, id){
     		var theNewComment = $('#cloneMe').clone();
     		
     		theNewComment.find('h4').text(city);
@@ -252,10 +252,55 @@
     		
     		theNewComment.find('img').attr('src', image);   
     		
+    		theNewComment.find('button').click(function(){
+    			deleteComment(id, theNewComment);
+    		});
+    		
     		$('#comments-list').prepend(theNewComment);
     		
     		theNewComment.show();    		
     	}
+    	
+    	function getAllComments(){
+    		$.ajax({
+    			url: "/comment/all",
+    			method: "GET",
+    			success: function(data){
+    				data.forEach(function(comm){
+    					addCommentToUI(comm.comment, comm.city, comm.temp, comm.icon, comm.id);
+    				});  				
+    			}    			
+    		});
+    		
+    	}
+    	
+    	
+    	function deleteComment(id, element){
+    		$.ajax({
+    			url: "/comment/delete",
+    			method: "DELETE",
+    			data: {
+    				id: id
+    			},
+    			complete: function(data){
+    				switch(data.status){
+    				case 200:
+    					element.remove(); 					
+    					break;
+    					
+    				case 401:
+    					windows.location.href = "index.html";
+    					break;
+    					
+    				case 404:
+    					alert("The comment was not found! Are you drunk again????");
+    					element.remove();
+    					break;
+    				}
+    			}
+    		});
+    	}
+    	
     	
     	$('#logout').on('click', function(e){
         	e.preventDefault();
@@ -273,6 +318,9 @@
         	});
         	
         });
+    	
+    	
+    	getAllComments();
     });
     
     

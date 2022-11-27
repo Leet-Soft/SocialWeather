@@ -11,7 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import uni.fmi.SocialWeather.user.UserEntity;
 
 
@@ -36,8 +40,9 @@ public class CommentEntity implements Serializable{
 	@Column(length = 250, nullable = false)
 	private String icon;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
+	@JsonIgnore
 	private UserEntity user;
 
 	public int getId() {
