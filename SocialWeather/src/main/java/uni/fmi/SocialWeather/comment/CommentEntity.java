@@ -37,7 +37,7 @@ public class CommentEntity implements Serializable{
 	private String icon;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "user_id")
 	private UserEntity user;
 
 	public int getId() {

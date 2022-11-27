@@ -2,6 +2,7 @@ package uni.fmi.SocialWeather.comment;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ public class CommentController {
 
 	private CommentService commentService;
 	
+	@Autowired
 	public CommentController(CommentService commentService) {
 		this.commentService = commentService;
 	}

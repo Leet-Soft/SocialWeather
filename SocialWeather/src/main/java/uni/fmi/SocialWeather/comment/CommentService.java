@@ -1,5 +1,6 @@
 package uni.fmi.SocialWeather.comment;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import uni.fmi.SocialWeather.user.UserEntity;
@@ -9,6 +10,7 @@ public class CommentService {
 
 	private CommentRepository commentRepository;
 	
+	@Autowired
 	public CommentService(CommentRepository commentRepository) {
 		this.commentRepository = commentRepository;
 	}

@@ -142,7 +142,7 @@
                             </div>
                         </div>
                         <div class="panel-footer" style="height:55px;">
-                            <button type="button" class="btn btn-primary pull-right publish"><span class="glyphicon glyphicon-globe"></span> Публикувай</button>
+                            <button type="button" id="post-button" class="btn btn-primary pull-right publish" ><span class="glyphicon glyphicon-globe"></span> Публикувай</button>
                         </div>
                     </div>
                 </div>
@@ -154,6 +154,7 @@
                         </div>
 
                         <ul class="list-group" style="min-height:241px;" id="comments-list">                                         
+        
         
                         </ul>
                     </div>
@@ -184,23 +185,97 @@
 
 <script>   
     
-    
-    $('#logout').on('click', function(e){
-    	e.preventDefault();
+    $(document).ready(function(){
     	
-    	$.ajax({
-    		url: "logout",
-    		method: "POST",
-    		complete: function(data){
-    			if(data.status == 418){
-    				alert("Why are you a teapot?!");
+    	var apiKey = "&appid=4ddc620cf659bfe28db6d4012c9fc208&units=metric";
+    	
+    	var url = "http://api.openweathermap.org/data/2.5/weather?q=";	
+    	
+    	var icons = {"04d":"scattered_clouds.png",
+    					"50d":"mist.png",
+    					"10d":"rain.png"}
+    	
+    	$('#post-button').click(function() {
+    		getWeatherFromApi();
+    	}); 
+    	
+    	function getWeatherFromApi(){
+    		
+    		$.ajax({
+    			method: "GET",
+    			url: url +  $('#select-city').val() + apiKey,
+    			dataType: "json"
+    		}).done(function(data){
+    			addComment(data);    			
+    		});
+    	}
+    	
+    	function addComment(data){
+    		temp = data.main.temp;
+    		icon = data.weather[0].icon;
+    		city = $('#select-city').val();
+    		comment = $('#comment').val();
+    		
+    		$.ajax({
+    			url: "/comment/add",
+    			method: "POST",
+    			data: {
+    				city: city,
+   					temp: temp,
+ 					description: comment,
+ 					icon: icon
+    			},
+    			success: function(data){
+    				if(data.includes("Error:")){
+    					alert(data);
+    				}else{
+    					addCommentToUI(comment, city, temp, icon);
+    				}
     			}
-    			
-    			window.location.href = "index.html";
-    		}
-    	});
+    		});
+    	}
     	
+    	function addCommentToUI(comment, city, temp, icon){
+    		var theNewComment = $('#cloneMe').clone();
+    		
+    		theNewComment.find('h4').text(city);
+    		theNewComment.find('p').text(comment);
+    		theNewComment.find('.current-temp').text(temp);
+    		theNewComment.attr('id', '');
+    		
+    		image = 'assets/img/icons/';
+    		if(icons[icon] == undefined){
+    			image += "clear_sky.png";
+    		}else{
+    			image += icons[icon];
+    		}
+    		
+    		theNewComment.find('img').attr('src', image);   
+    		
+    		$('#comments-list').prepend(theNewComment);
+    		
+    		theNewComment.show();    		
+    	}
+    	
+    	$('#logout').on('click', function(e){
+        	e.preventDefault();
+        	
+        	$.ajax({
+        		url: "logout",
+        		method: "POST",
+        		complete: function(data){
+        			if(data.status == 418){
+        				alert("Why are you a teapot?!");
+        			}
+        			
+        			window.location.href = "index.html";
+        		}
+        	});
+        	
+        });
     });
+    
+    
 
 </script>
 </body>
