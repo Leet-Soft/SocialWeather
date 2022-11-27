@@ -267,7 +267,7 @@
     			method: "GET",
     			success: function(data){
     				data.forEach(function(comm){
-    					addCommentToUI(comm.comment, comm.city, comm.temp, comm.icon, comm.id);
+    					addCommentToUI(comm.description, comm.city, comm.temp, comm.icon, comm.id);
     				});  				
     			}    			
     		});
@@ -319,7 +319,19 @@
         	
         });
     	
+    	function checkMe(){
+    		$.ajax({
+    			url: "userTest",
+    			method: "GET",
+    			complete: function(data){
+    				if(data.status == 401){
+    					window.location.href = "index.html";
+    				}
+    			}
+    		});
+    	}
     	
+    	checkMe();
     	getAllComments();
     });
     

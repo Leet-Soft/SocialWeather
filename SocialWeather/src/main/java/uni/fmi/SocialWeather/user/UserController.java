@@ -5,6 +5,10 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +22,7 @@ public class UserController {
 	@Autowired
 	public UserController(UserService userService) {
 		this.userService = userService;
-	}
-	
+	}	
 	
 	@PostMapping(path = "/register")
 	public UserEntity register( @RequestParam(value = "email") String email, 
@@ -57,6 +60,19 @@ public class UserController {
 		}else {
 			return new ResponseEntity<Integer>(-1, HttpStatus.UNAUTHORIZED);
 		}
+	}
+	
+	@GetMapping(path = "/userTest")
+	public ResponseEntity<Boolean> kickMeOut(){
+		Authentication au = 
+				SecurityContextHolder.getContext().getAuthentication();
+		
+		if( au != null && au.isAuthenticated() &&				
+			!(au instanceof AnonymousAuthenticationToken)) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);			
+		}else {
+			return new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);		
+		}		
 	}
 	
 	@PostMapping(path = "/logout")
