@@ -1,17 +1,22 @@
 package uni.fmi.SocialWeather.user;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import uni.fmi.SocialWeather.comment.CommentEntity;
 
 @Entity
 @Table(name = "user")
@@ -38,6 +43,9 @@ public class UserEntity implements Serializable{
 		joinColumns = @JoinColumn(name="account_id"),
 		inverseJoinColumns = @JoinColumn(name="role_id"))
 	private Set<RoleEntity> roles;
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private List<CommentEntity> comments;
 
 	public UserEntity(String username, String password, String email) {
 		this.username = username;
@@ -94,5 +102,12 @@ public class UserEntity implements Serializable{
 	public void setRoles(Set<RoleEntity> roles) {
 		this.roles = roles;
 	}
-	
+
+	public List<CommentEntity> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentEntity> comments) {
+		this.comments = comments;
+	}	
 }
